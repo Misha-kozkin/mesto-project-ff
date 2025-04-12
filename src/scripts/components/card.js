@@ -2,7 +2,7 @@
 const cardTemplate = document.querySelector('#card-template').content;
 
 // Функция создания карточки
-export function createCard(elements, imageClick) {
+export function createCard(elements, imageClick, handleLikeClick, handleDeleteCard) {
   const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
   const cardImage = cardElement.querySelector('.card__image');
   const likeButton = cardElement.querySelector('.card__like-button');
@@ -17,23 +17,22 @@ export function createCard(elements, imageClick) {
   });
 
   likeButton.addEventListener('click', () => {
-    handleLikeButton(likeButton);
+    handleLikeClick(likeButton);
   });
 
   deleteButton.addEventListener('click', () => {
-    deleteCard(cardElement);
+    handleDeleteCard(cardElement);
   });
 
   return cardElement;
 };
 
 // Обработчик лайка
-function handleLikeButton(likeButton) {
+export function handleLikeButton(likeButton) {
   likeButton.classList.toggle('card__like-button_is-active');
 };
 
 // Функция удаления карточки
-function deleteCard(cardElement) {
+export function deleteCard(cardElement) {
   cardElement.remove();
 };
-

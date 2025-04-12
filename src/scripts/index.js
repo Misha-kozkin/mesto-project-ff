@@ -1,7 +1,7 @@
 import '../pages/index.css'; 
 // Импортируем модули
 import { initialCards } from './components/cards.js';
-import { createCard } from './components/card.js';
+import { createCard, handleLikeButton, deleteCard } from './components/card.js';
 import { openModal, closeModal, setPopupListeners } from './components/modal.js';
 
 // DOM-элементы страницы
@@ -72,7 +72,7 @@ function handleAddCardSubmit(evt) {
     link: cardLink
   };
 
-  const card = createCard(newCard, handleCardClick);
+  const card = createCard(newCard, handleCardClick, handleLikeButton, deleteCard);
   placesList.prepend(card);
 
   newPlaceForm.reset();
@@ -84,5 +84,5 @@ newPlaceForm.addEventListener('submit', handleAddCardSubmit);
 
 // Инициализация карточек
 initialCards.forEach(item => {
-  placesList.append(createCard(item, handleCardClick));
+  placesList.append(createCard(item, handleCardClick, handleLikeButton, deleteCard));
 });

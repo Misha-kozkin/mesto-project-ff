@@ -1,6 +1,7 @@
 import '../pages/index.css'; 
 // Импортируем модули
-import { initialCards, cardCreation } from './components/cards.js';
+import { initialCards } from './components/cards.js';
+import { createCard } from './components/card.js';
 import { openModal, closeModal, setPopupListeners } from './components/modal.js';
 
 // DOM-элементы страницы
@@ -16,6 +17,11 @@ const profileName = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
 const editProfileForm = document.forms['edit-profile'];
 const newPlaceForm = document.forms['new-place'];
+// Глобальные инпуты
+const nameInput = editProfileForm.querySelector('.popup__input_type_name');
+const jobInput = editProfileForm.querySelector('.popup__input_type_description');
+const placeNameInput = newPlaceForm.querySelector('.popup__input_type_card-name');
+const placeLinkInput = newPlaceForm.querySelector('.popup__input_type_url');
 
 // Обработчик открытия картинки в попапе
 function handleCardClick(name, link) {
@@ -23,62 +29,60 @@ function handleCardClick(name, link) {
   popupImg.alt = name;
   popupCaption.textContent = name;
   openModal(popupImage);
-};
-
-// Обработчик лайка
-function handleLikeButton(likeButton) {
-  likeButton.classList.toggle('card__like-button_is-active');
-};
+}
 
 // Обработчики открытия попапов
-openEditBtn.addEventListener('click', () => openModal(editPopuo));
+openEditBtn.addEventListener('click', () => {
+  nameInput.value = profileName.textContent;
+  jobInput.value = profileDescription.textContent;
+  openModal(editPopuo);
+});
+
 openAddCardBtn.addEventListener('click', () => openModal(newCardPopup));
 
 // Назначаем обработчики закрытия (крестик и оверлей)
 const popups = document.querySelectorAll('.popup');
 popups.forEach(setPopupListeners);
 
-// Обработчики отправки форм
-editProfileForm.addEventListener('submit', function(evt) {
-  handleFormSubmit(evt, 'profile')} );
-newPlaceForm.addEventListener('submit', function(evt) {
-  handleFormSubmit(evt, 'new-card', placesList, handleCardClick, handleLikeButton)
-});
+// обработчик редактирования профиля
+function handleEditProfileSubmit(evt) {
+  evt.preventDefault();
+
+  const nameValue = nameInput.value;
+  const jobValue = jobInput.value;
+
+  profileName.textContent = nameValue;
+  profileDescription.textContent = jobValue;
+
+  closeModal(editPopuo);
+};
+// Назначаем обработчик
+editProfileForm.addEventListener('submit', handleEditProfileSubmit);
+
+
+// обработчик добавления карточки
+function handleAddCardSubmit(evt) {
+  evt.preventDefault();
+
+  const cardName = placeNameInput.value;
+  const cardLink = placeLinkInput.value;
+
+  const newCard = {
+    name: cardName,
+    link: cardLink
+  };
+
+  const card = createCard(newCard, handleCardClick);
+  placesList.prepend(card);
+
+  newPlaceForm.reset();
+  closeModal(newCardPopup);
+};
+// Назначаем обработчик
+newPlaceForm.addEventListener('submit', handleAddCardSubmit);
+
 
 // Инициализация карточек
 initialCards.forEach(item => {
-  placesList.append(cardCreation(item, handleCardClick, handleLikeButton));
+  placesList.append(createCard(item, handleCardClick));
 });
-
-// обработчик форм
-function handleFormSubmit(evt, type, placesList, handleCardClick, handleLikeButton) {
-  evt.preventDefault();
-
-  if (type === 'profile') {
-    const nameInput = evt.target.querySelector('.popup__input_type_name');
-    const jobInput = evt.target.querySelector('.popup__input_type_description');
-
-    profileName.textContent = nameInput.value;
-    profileDescription.textContent = jobInput.value;
-
-    const popup = evt.target.closest('.popup');
-    closeModal(popup);
-  };
-
-  if (type === 'new-card') {
-    const placeNameInput = evt.target.querySelector('.popup__input_type_card-name');
-    const placeLinkInput = evt.target.querySelector('.popup__input_type_url');
-
-    const newCard = {
-      name: placeNameInput.value,
-      link: placeLinkInput.value
-    };
-
-    const card = cardCreation(newCard, handleCardClick, handleLikeButton);
-    placesList.prepend(card);
-
-    evt.target.reset();
-    const popup = evt.target.closest('.popup');
-    closeModal(popup);
-  };
-};

@@ -5,7 +5,7 @@
 
 https://github.com/Misha-kozkin/mesto-project-ff.git
 
-[посмотреть проект]()
+[посмотреть проект](https://misha-kozkin.github.io/mesto-project-ff/)
 
 ## Описание проекта
 

@@ -2,7 +2,7 @@ import '../pages/index.css';
 // Импортируем модули
 import { createCard, handleLikeButton } from './components/card.js'; //удалил deleteCard
 import { openModal, closeModal, setPopupListeners } from './components/modal.js';
-import { enableValidation, clearValidation, validationConfig } from './components/validation.js';
+import { enableValidation, clearValidation } from './components/validation.js';
 import { 
   getUserInfo,
   getInitialCards,
@@ -43,13 +43,23 @@ const placeNameInput = newPlaceForm.querySelector('.popup__input_type_card-name'
 const placeLinkInput = newPlaceForm.querySelector('.popup__input_type_url');
 const avatarInput = editAvatarForm.querySelector('.popup__input_avatar_type_url');
 
+//config для волидации форм
+const validationConfig = {
+  formSelector: '.popup__form',                 
+  inputSelector: '.popup__input',               
+  submitButtonSelector: '.popup__button',       
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',   
+  errorClass: 'popup__error_visible'            
+};
+
 //глобальные переменные
 // ID карточки которую пользователь выбрал для удаления
 let cardIdToDelete = null;
 // ID карточки карточку которую нужно удалить после true
 let cardElementToDelete = null;
 // ID текущего пользователя
-export let currentUserId;
+let currentUserId;
 // URL текущего аватара пользователя
 let currentAvatarUrl = '';
 

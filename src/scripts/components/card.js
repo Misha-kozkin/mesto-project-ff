@@ -1,5 +1,4 @@
 import { likeCard, unlikeCard } from '../components/api.js';
-import { currentUserId } from '../index.js';
 
 // Темплейт карточки
 const cardTemplate = document.querySelector('#card-template').content;
@@ -36,7 +35,8 @@ export function createCard(elements, imageClick, handleLikeClick, handleDeleteCa
       cardId: elements._id,
       likeButton,
       likeCounter,
-      isLiked: likeButton.classList.contains('card__like-button_is-active')
+      isLiked: likeButton.classList.contains('card__like-button_is-active'),
+      userId
     });
   });
 
@@ -48,7 +48,7 @@ export function createCard(elements, imageClick, handleLikeClick, handleDeleteCa
 };
 
 // обработчик лайка и дизлайка
-export function handleLikeButton({ cardId, likeButton, likeCounter, isLiked }) {
+export function handleLikeButton({ cardId, likeButton, likeCounter, isLiked, userId }) {
   const action = isLiked ? unlikeCard : likeCard;
 
   action(cardId)
@@ -57,7 +57,7 @@ export function handleLikeButton({ cardId, likeButton, likeCounter, isLiked }) {
       likeCounter.textContent = updatedCard.likes.length;
 
       // переключение класса
-      if (updatedCard.likes.some(user => user._id === currentUserId)) {
+      if (updatedCard.likes.some(user => user._id === userId)) {
         likeButton.classList.add('card__like-button_is-active');
       } else {
         likeButton.classList.remove('card__like-button_is-active');
